@@ -1,7 +1,8 @@
-import { expect, Locator, Page } from '@playwright/test';
+import { Locator, Page } from '@playwright/test';
+import { RELATIVE_URL } from '../playwright.config';
 
 export class LoginPage {
-  url = 'https://rafaljab.github.io/gui-automation-playground/login';
+  url = RELATIVE_URL + '/login';
   readonly page: Page;
   readonly emailField: Locator;
   readonly passField: Locator;

@@ -1,4 +1,5 @@
 import { test, expect } from '@playwright/test';
+import { RELATIVE_URL } from '../playwright.config';
 import { LoginPage } from '../pom/login';
 
 test('login with correct data', async ({ page }) => {
@@ -12,7 +13,7 @@ test('login with correct data', async ({ page }) => {
   await loginPage.login(email, password);
 
   // Then
-  await expect(page).toHaveURL('https://rafaljab.github.io/gui-automation-playground');
+  await expect(page).toHaveURL(RELATIVE_URL);
   await expect(loginPage.alertNotification).toBeHidden();
 });
 
