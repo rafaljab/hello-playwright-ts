@@ -1,15 +1,12 @@
-import { test, expect } from '@playwright/test';
+import { test, expect } from '../base';
 import { RELATIVE_URL } from '../playwright.config';
-import { LoginPage } from '../pom/login';
 
-test('login with correct data', async ({ page }) => {
+test('login with correct data', async ({ loginPage, page }) => {
   // Given
   const email = 'admin@example.com';
   const password = 'admin123';
-  const loginPage = new LoginPage(page);
 
   // When
-  await loginPage.navigate();
   await loginPage.login(email, password);
 
   // Then
@@ -17,14 +14,12 @@ test('login with correct data', async ({ page }) => {
   await expect(loginPage.alertNotification).toBeHidden();
 });
 
-test('login with incorrect email', async ({ page }) => {
+test('login with incorrect email', async ({ loginPage, page }) => {
   // Given
   const email = 'test@example.com';
   const password = 'admin123';
-  const loginPage = new LoginPage(page);
 
   // When
-  await loginPage.navigate();
   await loginPage.login(email, password);
 
   // Then
@@ -32,14 +27,12 @@ test('login with incorrect email', async ({ page }) => {
   await expect(loginPage.alertNotification).toBeVisible();
 });
 
-test('login with incorrect password', async ({ page }) => {
+test('login with incorrect password', async ({ loginPage, page }) => {
   // Given
   const email = 'admin@example.com';
   const password = 'test';
-  const loginPage = new LoginPage(page);
 
   // When
-  await loginPage.navigate();
   await loginPage.login(email, password);
 
   // Then
