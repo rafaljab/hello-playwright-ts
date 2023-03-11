@@ -1,5 +1,6 @@
 import { Locator, Page } from '@playwright/test';
 import { ShopPage } from './shop';
+import { TodosPage } from './todos';
 
 export class LeftMenuFragment {
   readonly page: Page;
@@ -21,5 +22,10 @@ export class LeftMenuFragment {
   async clickShopLink() {
     await this.shopLink.click();
     return new ShopPage(this.page);
+  }
+
+  async clickTodosLink() {
+    await this.todosLink.click();
+    return new TodosPage(this.page);
   }
 }

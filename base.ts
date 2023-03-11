@@ -2,7 +2,9 @@ import { Page, test as base} from '@playwright/test';
 import { LoginPage } from './pom/login';
 import { LeftMenuFragment } from './pom/left-menu';
 import { ShopPage } from './pom/shop';
+import { TodosPage } from './pom/todos';
 import authenticatedStateJson from 'tests/test-data/authenticated-state.json';
+import todosStateJson from 'tests/test-data/todos_state.json';
 
 type MyFixtures = {
   loginPage: LoginPage;
@@ -11,6 +13,9 @@ type MyFixtures = {
   leftMenuFragment: LeftMenuFragment;
   shopPage: ShopPage;
   shopPageAuthenticated: ShopPage;
+  todosPage: TodosPage;
+  todosPageAuthenticated: TodosPage;
+  todosPageWithState: TodosPage;
 };
 
 export const test = base.extend<MyFixtures>({
@@ -41,6 +46,23 @@ export const test = base.extend<MyFixtures>({
     const shopPageAuthenticated = new ShopPage(pageAuthenticated);
     await shopPageAuthenticated.navigate();
     await use(shopPageAuthenticated);
+  },
+  todosPage: async ({ leftMenuFragment }, use) => {
+    const todosPage = await leftMenuFragment.clickTodosLink();
+    await use(todosPage);
+  },
+  todosPageAuthenticated: async ({ pageAuthenticated }, use) => {
+    const todosPageAuthenticated = new TodosPage(pageAuthenticated);
+    await todosPageAuthenticated.navigate();
+    await use(todosPageAuthenticated);
+  },
+  todosPageWithState: async ({ browser, baseURL }, use) => {
+    const context = await browser.newContext({ storageState: replaceOriginInState(todosStateJson, baseURL) });
+    const page = await context.newPage();
+    const todosPage = new TodosPage(page);
+    await todosPage.navigate();
+    await use(todosPage);
+    await context.close();
   }
 });
 
