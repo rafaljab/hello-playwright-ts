@@ -1,6 +1,8 @@
 # Hello Playwright (Typescript)
 This is an example implementation of automated tests using Playwright with Typescript.
 
+You can also check how this can be done using Playwright with Python (Pytest) here: [helloPlaywrightPy](https://github.com/rafaljab/helloPlaywrightPy).
+
 ## Features
 * Page Object Model
 * Pytest fixtures
