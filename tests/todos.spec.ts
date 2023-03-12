@@ -104,7 +104,7 @@ test('clear todos', async ({ todosPageWithState }) => {
   await expect(todosPage.todoItemCheckbox(tasks[2])).toBeVisible();
 });
 
-test('todos', async ({ todosPage }) => {
+test('todos @e2e', async ({ todosPage }) => {
   // Given
   const tasks = [
     'Buy milk',

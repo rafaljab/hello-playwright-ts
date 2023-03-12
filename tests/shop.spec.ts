@@ -32,7 +32,7 @@ const orders = [
   }
 ];
 for (const order of orders) {
-  test(`add product to cart - ${order.productName}`, async ({ shopPageAuthenticated }) => {
+  test(`add product to cart - ${order.productName} @with_rest_api`, async ({ shopPageAuthenticated }) => {
     // Given
     const shopPage = shopPageAuthenticated;
 
@@ -50,7 +50,7 @@ for (const order of orders) {
   });
 }
 
-test('add multiple products to cart', async ({ shopPageAuthenticated }) => {
+test('add multiple products to cart @with_rest_api', async ({ shopPageAuthenticated }) => {
   // Given
   const shopPage = shopPageAuthenticated;
 
@@ -68,7 +68,7 @@ test('add multiple products to cart', async ({ shopPageAuthenticated }) => {
   await expect(shopPage.shopHeaderTotalPrice).toHaveText('Total Price: $3,246.00');
 });
 
-test('change number of product items in cart', async ({ shopPageAuthenticated }) => {
+test('change number of product items in cart @with_rest_api', async ({ shopPageAuthenticated }) => {
   // Given
   const shopPage = shopPageAuthenticated;
 
@@ -94,7 +94,7 @@ test('change number of product items in cart', async ({ shopPageAuthenticated })
   await expect(shopPage.productCartItemSubtotalPrice(productName)).toHaveText('Subtotal Price: $5,490.00');
 });
 
-test('remove product item from cart', async ({ shopPageAuthenticated }) => {
+test('remove product item from cart @with_rest_api', async ({ shopPageAuthenticated }) => {
   // Given
   const shopPage = shopPageAuthenticated;
 
@@ -116,7 +116,7 @@ test('remove product item from cart', async ({ shopPageAuthenticated }) => {
   await expect(shopPage.placeOrderBtn).toBeDisabled();
 });
 
-test('place order', async ({ shopPage }) => {
+test('place order @with_rest_api @e2e', async ({ shopPage }) => {
   // Given
   const productsToOrder = [
     {
