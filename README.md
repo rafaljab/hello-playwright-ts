@@ -5,11 +5,16 @@ You can also check how this can be done using Playwright with Python (Pytest) he
 
 ## Features
 * Page Object Model
-* Pytest fixtures
+* Fixtures
 * Parametrized tests
 * Tagged tests
 * CI Pipeline (GitHub Actions)
 * Reports (Playwright native)
+
+## Tech stack
+* [Playwright](https://playwright.dev/)
+* [Typescript](https://www.typescriptlang.org/)
+* [ESLint](https://eslint.org/)
 
 ## Application under tests
 We'll be testing a web application written in React from this repository: [GUI Automation Playground](https://github.com/rafaljab/gui-automation-playground) (v1.1.0).
