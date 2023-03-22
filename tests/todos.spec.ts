@@ -11,7 +11,7 @@ test('add todos', async ({ todosPageAuthenticated }) => {
   ];
 
   await expect(todosPage.noTodosParagraph).toBeVisible();
-  await expect(todosPage.todoItems).not.toBeVisible();
+  await expect(todosPage.todoItems).toBeHidden();
 
   // When
   for (const task of tasks) {
@@ -90,7 +90,7 @@ test('clear todos', async ({ todosPageWithState }) => {
   await todosPage.clearCompletedTasks();
 
   // Then
-  await expect(todosPage.todoItemCheckbox(tasks[0])).not.toBeVisible();
+  await expect(todosPage.todoItemCheckbox(tasks[0])).toBeHidden();
   await expect(todosPage.todoItemCheckbox(tasks[1])).toBeVisible();
   await expect(todosPage.todoItemCheckbox(tasks[2])).toBeVisible();
 
@@ -99,8 +99,8 @@ test('clear todos', async ({ todosPageWithState }) => {
   await todosPage.clearCompletedTasks();
 
   // Then
-  await expect(todosPage.todoItemCheckbox(tasks[0])).not.toBeVisible();
-  await expect(todosPage.todoItemCheckbox(tasks[1])).not.toBeVisible();
+  await expect(todosPage.todoItemCheckbox(tasks[0])).toBeHidden();
+  await expect(todosPage.todoItemCheckbox(tasks[1])).toBeHidden();
   await expect(todosPage.todoItemCheckbox(tasks[2])).toBeVisible();
 });
 
@@ -121,7 +121,7 @@ test('todos @e2e', async ({ todosPage }) => {
   // Then
   await expect(todosPage.todoItem(tasks[0])).toBeVisible();
   await expect(todosPage.todoItem(tasks[1])).toBeVisible();
-  await expect(todosPage.noTodosParagraph).not.toBeVisible();
+  await expect(todosPage.noTodosParagraph).toBeHidden();
 
   // When
   await todosPage.toggleTodoItem(tasks[1]);
@@ -129,17 +129,17 @@ test('todos @e2e', async ({ todosPage }) => {
 
   // Then
   await expect(todosPage.todoItem(tasks[0])).toBeVisible();
-  await expect(todosPage.todoItem(tasks[1])).not.toBeVisible();
-  await expect(todosPage.noTodosParagraph).not.toBeVisible();
+  await expect(todosPage.todoItem(tasks[1])).toBeHidden();
+  await expect(todosPage.noTodosParagraph).toBeHidden();
 
   // When
   await todosPage.addTask(tasks[2]);
 
   // Then
   await expect(todosPage.todoItem(tasks[0])).toBeVisible();
-  await expect(todosPage.todoItem(tasks[1])).not.toBeVisible();
+  await expect(todosPage.todoItem(tasks[1])).toBeHidden();
   await expect(todosPage.todoItem(tasks[2])).toBeVisible();
-  await expect(todosPage.noTodosParagraph).not.toBeVisible();
+  await expect(todosPage.noTodosParagraph).toBeHidden();
 
   // When
   await todosPage.toggleTodoItem(tasks[0]);
@@ -147,8 +147,8 @@ test('todos @e2e', async ({ todosPage }) => {
   await todosPage.clearCompletedTasks();
 
   // Then
-  await expect(todosPage.todoItem(tasks[0])).not.toBeVisible();
-  await expect(todosPage.todoItem(tasks[1])).not.toBeVisible();
-  await expect(todosPage.todoItem(tasks[2])).not.toBeVisible();
+  await expect(todosPage.todoItem(tasks[0])).toBeHidden();
+  await expect(todosPage.todoItem(tasks[1])).toBeHidden();
+  await expect(todosPage.todoItem(tasks[2])).toBeHidden();
   await expect(todosPage.noTodosParagraph).toBeVisible();
 });

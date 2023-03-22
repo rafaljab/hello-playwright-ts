@@ -4,7 +4,7 @@ test('open empty cart', async ({ shopPageAuthenticated }) => {
   // Given
   const shopPage = shopPageAuthenticated;
 
-  await expect(shopPage.emptyCartText).not.toBeVisible();
+  await expect(shopPage.emptyCartText).toBeHidden();
 
   // When
   await shopPage.viewCart();
@@ -104,14 +104,14 @@ test('remove product item from cart @with_rest_api', async ({ shopPageAuthentica
   await shopPage.viewCart();
 
   await expect(shopPage.productCartItem(productName)).toBeVisible();
-  await expect(shopPage.emptyCartText).not.toBeVisible();
+  await expect(shopPage.emptyCartText).toBeHidden();
   await expect(shopPage.placeOrderBtn).toBeEnabled();
 
   // When
   await shopPage.removeProductFromCart(productName);
 
   // Then
-  await expect(shopPage.productCartItem(productName)).not.toBeVisible();
+  await expect(shopPage.productCartItem(productName)).toBeHidden();
   await expect(shopPage.emptyCartText).toBeVisible();
   await expect(shopPage.placeOrderBtn).toBeDisabled();
 });
@@ -142,8 +142,10 @@ test('place order @with_rest_api @e2e', async ({ shopPage }) => {
   for (const product of productsToOrder) {
     await shopPage.addProductToCart(product.productName);
 
+    // eslint-disable-next-line playwright/no-conditional-in-test
     if (product.quantityByDropdown === true || product.quantityByDropdown === null) {
       await shopPage.viewCart();
+      // eslint-disable-next-line playwright/no-conditional-in-test
       if (product.quantity > 0) {
         await shopPage.changeQuantityOfProduct(product.productName, product.quantity);
       } else {

@@ -1,4 +1,4 @@
-import { Page, test as base} from '@playwright/test';
+import { Page, test as base, BrowserContextOptions } from '@playwright/test';
 import { LoginPage } from './pom/login';
 import { LeftMenuFragment } from './pom/left-menu';
 import { ShopPage } from './pom/shop';
@@ -8,7 +8,7 @@ import todosStateJson from 'tests/test-data/todos_state.json';
 
 type MyFixtures = {
   loginPage: LoginPage;
-  login: Promise<void>;
+  login: void;
   pageAuthenticated: Page;
   leftMenuFragment: LeftMenuFragment;
   shopPage: ShopPage;
@@ -26,19 +26,22 @@ export const test = base.extend<MyFixtures>({
   },
   login: async ({ loginPage }, use) => {
     await loginPage.login('admin@example.com', 'admin123');
-    await use(null);
+    await use();
   },
   pageAuthenticated: async ({ browser, baseURL }, use) => {
-    const context = await browser.newContext({ storageState: replaceOriginInState(authenticatedStateJson, baseURL) });
+    const context = await browser.newContext(
+      { storageState: replaceOriginInState(authenticatedStateJson, baseURL as string) }
+    );
     const page = await context.newPage();
     await use(page);
     await context.close();
   },
-  leftMenuFragment: async ({ page, login }, use) => {
+  leftMenuFragment: async ({ page }, use) => {
     const leftMenuFragment = new LeftMenuFragment(page);
     await use(leftMenuFragment);
   },
-  shopPage: async ({ leftMenuFragment }, use) => {
+  shopPage: async ({ leftMenuFragment, login }, use) => {
+    await login;
     const shopPage = await leftMenuFragment.clickShopLink();
     await use(shopPage);
   },
@@ -47,7 +50,8 @@ export const test = base.extend<MyFixtures>({
     await shopPageAuthenticated.navigate();
     await use(shopPageAuthenticated);
   },
-  todosPage: async ({ leftMenuFragment }, use) => {
+  todosPage: async ({ leftMenuFragment, login }, use) => {
+    await login;
     const todosPage = await leftMenuFragment.clickTodosLink();
     await use(todosPage);
   },
@@ -57,7 +61,9 @@ export const test = base.extend<MyFixtures>({
     await use(todosPageAuthenticated);
   },
   todosPageWithState: async ({ browser, baseURL }, use) => {
-    const context = await browser.newContext({ storageState: replaceOriginInState(todosStateJson, baseURL) });
+    const context = await browser.newContext(
+      { storageState: replaceOriginInState(todosStateJson, baseURL as string) }
+    );
     const page = await context.newPage();
     const todosPage = new TodosPage(page);
     await todosPage.navigate();
@@ -66,9 +72,11 @@ export const test = base.extend<MyFixtures>({
   }
 });
 
-function replaceOriginInState(data, baseUrl) {
-  data.origins[0].origin = baseUrl
-  return data
+function replaceOriginInState(data: BrowserContextOptions['storageState'], baseUrl: string) {
+  if (data != null && typeof data !== 'string' && baseUrl != null) {
+    data.origins[0].origin = baseUrl;
+  }
+  return data;
 }
 
 export { expect } from '@playwright/test';
