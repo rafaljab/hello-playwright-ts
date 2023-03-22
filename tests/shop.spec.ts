@@ -134,7 +134,7 @@ test('place order @with_rest_api @e2e', async ({ shopPage }) => {
       quantity: 1,
       quantityByDropdown: null
     }
-  ]
+  ];
   const totalQuantity = 9;
   const totalPrice = '$7,391.00';
 

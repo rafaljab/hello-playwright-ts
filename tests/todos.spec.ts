@@ -8,7 +8,7 @@ test('add todos', async ({ todosPageAuthenticated }) => {
     'Buy milk',
     'Go for a walk',
     'Wash the dishes'
-  ]
+  ];
 
   await expect(todosPage.noTodosParagraph).toBeVisible();
   await expect(todosPage.todoItems).not.toBeVisible();
@@ -33,7 +33,7 @@ test('load todos from states', async ({ todosPageWithState }) => {
     'Buy milk',
     'Go for a walk',
     'Wash the dishes'
-  ]
+  ];
 
   await expect(todosPage.todoItems.first()).toBeVisible();
 
@@ -54,7 +54,7 @@ test('toggle todos', async ({ todosPageWithState }) => {
     'Buy milk',
     'Go for a walk',
     'Wash the dishes'
-  ]
+  ];
 
   await expect(todosPage.todoItemCheckbox(tasks[0])).not.toBeChecked();
 
@@ -79,7 +79,7 @@ test('clear todos', async ({ todosPageWithState }) => {
     'Buy milk',
     'Go for a walk',
     'Wash the dishes'
-  ]
+  ];
 
   await expect(todosPage.todoItemCheckbox(tasks[0])).toBeVisible();
   await expect(todosPage.todoItemCheckbox(tasks[1])).toBeVisible();
@@ -110,7 +110,7 @@ test('todos @e2e', async ({ todosPage }) => {
     'Buy milk',
     'Go for a walk',
     'Wash the dishes'
-  ]
+  ];
 
   await expect(todosPage.noTodosParagraph).toBeVisible();
 
