@@ -1,7 +1,18 @@
 {
   "compilerOptions": {
+    "target": "es2020",
+    "module": "commonjs",
+    "outDir": "./build",
+    "strict": true,
     "esModuleInterop": true,
+    "skipLibCheck": true,
+    "sourceMap": true,
+    "declaration": true,
     "baseUrl": ".",
     "resolveJsonModule": true,
-  }
+    "lib": ["esnext", "dom"],
+    "types": ["node", "@types/jest", "playwright"]
+  },
+  "include": ["**/*.ts"],
+  "exclude": ["node_modules", "build"]
 }
