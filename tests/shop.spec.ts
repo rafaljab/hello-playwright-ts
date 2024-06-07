@@ -16,19 +16,19 @@ test('open empty cart', async ({ shopPageAuthenticated }) => {
 
 const orders = [
   {
-    productName: 'iPhone 9',
+    productName: 'Cucumber',
     totalItems: 1,
-    totalPrice: '$549.00'
+    totalPrice: '$1.49'
   },
   {
-    productName: 'iPhone X',
+    productName: 'Eggs',
     totalItems: 1,
-    totalPrice: '$899.00'
+    totalPrice: '$2.99'
   },
   {
-    productName: 'Samsung Universe 9',
+    productName: 'Kiwi',
     totalItems: 1,
-    totalPrice: '$1,249.00'
+    totalPrice: '$2.49'
   }
 ];
 for (const order of orders) {
@@ -58,47 +58,47 @@ test('add multiple products to cart @with_rest_api', async ({ shopPageAuthentica
   await expect(shopPage.shopHeaderTotalPrice).toHaveText('Total Price: $0.00');
 
   // When
-  await shopPage.addProductToCart('iPhone 9');
-  await shopPage.addProductToCart('iPhone X');
-  await shopPage.addProductToCart('Samsung Universe 9');
-  await shopPage.addProductToCart('iPhone 9');
+  await shopPage.addProductToCart('Cucumber');
+  await shopPage.addProductToCart('Eggs');
+  await shopPage.addProductToCart('Kiwi');
+  await shopPage.addProductToCart('Juice');
 
   // Then
   await expect(shopPage.shopHeaderTotalItems).toHaveText('Total Items: 4');
-  await expect(shopPage.shopHeaderTotalPrice).toHaveText('Total Price: $3,246.00');
+  await expect(shopPage.shopHeaderTotalPrice).toHaveText('Total Price: $10.96');
 });
 
 test('change number of product items in cart @with_rest_api', async ({ shopPageAuthenticated }) => {
   // Given
   const shopPage = shopPageAuthenticated;
 
-  const productName = 'iPhone 9';
+  const productName = 'Kiwi';
 
   await shopPage.addProductToCart(productName);
   await shopPage.viewCart();
 
   await expect(shopPage.shopHeaderTotalItems).toHaveText('Total Items: 1');
-  await expect(shopPage.shopHeaderTotalPrice).toHaveText('Total Price: $549.00');
+  await expect(shopPage.shopHeaderTotalPrice).toHaveText('Total Price: $2.49');
   await expect(shopPage.productCartItemBadge(productName)).toHaveText('1');
   await expect(shopPage.productCartItemQuantityDropdown(productName)).toHaveText('1');
-  await expect(shopPage.productCartItemSubtotalPrice(productName)).toHaveText('Subtotal Price: $549.00');
+  await expect(shopPage.productCartItemSubtotalPrice(productName)).toHaveText('Subtotal Price: $2.49');
 
   // When
   await shopPage.changeQuantityOfProduct(productName, 10);
 
   // Then
   await expect(shopPage.shopHeaderTotalItems).toHaveText('Total Items: 10');
-  await expect(shopPage.shopHeaderTotalPrice).toHaveText('Total Price: $5,490.00');
+  await expect(shopPage.shopHeaderTotalPrice).toHaveText('Total Price: $24.90');
   await expect(shopPage.productCartItemBadge(productName)).toHaveText('10');
   await expect(shopPage.productCartItemQuantityDropdown(productName)).toHaveText('10');
-  await expect(shopPage.productCartItemSubtotalPrice(productName)).toHaveText('Subtotal Price: $5,490.00');
+  await expect(shopPage.productCartItemSubtotalPrice(productName)).toHaveText('Subtotal Price: $24.90');
 });
 
 test('remove product item from cart @with_rest_api', async ({ shopPageAuthenticated }) => {
   // Given
   const shopPage = shopPageAuthenticated;
 
-  const productName = 'iPhone 9';
+  const productName = 'Kiwi';
 
   await shopPage.addProductToCart(productName);
   await shopPage.viewCart();
@@ -120,23 +120,23 @@ test('place order @with_rest_api @e2e', async ({ shopPage }) => {
   // Given
   const productsToOrder = [
     {
-      productName: 'iPhone 9',
+      productName: 'Kiwi',
       quantity: 3, // 0 <= quantity
       quantityByDropdown: false
     },
     {
-      productName: 'iPhone X',
+      productName: 'Juice',
       quantity: 5,
       quantityByDropdown: true
     },
     {
-      productName: 'Samsung Universe 9',
+      productName: 'Cucumber',
       quantity: 1,
       quantityByDropdown: null
     }
   ];
   const totalQuantity = 9;
-  const totalPrice = '$7,391.00';
+  const totalPrice = '$28.91';
 
   // When
   for (const product of productsToOrder) {
