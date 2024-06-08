@@ -1,5 +1,6 @@
 import { Page, test as base, BrowserContextOptions } from '@playwright/test';
 import { LoginPage } from './pom/login';
+import { TopMenuFragment } from './pom/top-menu';
 import { LeftMenuFragment } from './pom/left-menu';
 import { ShopPage } from './pom/shop';
 import { TodosPage } from './pom/todos';
@@ -10,6 +11,7 @@ type MyFixtures = {
   loginPage: LoginPage;
   login: void;
   pageAuthenticated: Page;
+  topMenuFragment: TopMenuFragment;
   leftMenuFragment: LeftMenuFragment;
   shopPage: ShopPage;
   shopPageAuthenticated: ShopPage;
@@ -36,7 +38,13 @@ export const test = base.extend<MyFixtures>({
     await use(page);
     await context.close();
   },
-  leftMenuFragment: async ({ page }, use) => {
+  topMenuFragment: async ({ page, login }, use) => {
+    await login;
+    const topMenuFragment = new TopMenuFragment(page);
+    await use(topMenuFragment);
+  },
+  leftMenuFragment: async ({ page, topMenuFragment }, use) => {
+    await topMenuFragment.openMenu();
     const leftMenuFragment = new LeftMenuFragment(page);
     await use(leftMenuFragment);
   },
