@@ -16,19 +16,19 @@ test('open empty cart', async ({ shopPageAuthenticated }) => {
 
 const orders = [
   {
-    productName: 'Cucumber',
-    totalItems: 1,
-    totalPrice: '$1.49'
-  },
-  {
-    productName: 'Eggs',
-    totalItems: 1,
-    totalPrice: '$2.99'
-  },
-  {
-    productName: 'Kiwi',
+    productName: 'Calypso Mangoes',
     totalItems: 1,
     totalPrice: '$2.49'
+  },
+  {
+    productName: 'Honeycrisp Apples',
+    totalItems: 1,
+    totalPrice: '$1.99'
+  },
+  {
+    productName: 'Large Avocados',
+    totalItems: 1,
+    totalPrice: '$2.29'
   }
 ];
 for (const order of orders) {
@@ -58,21 +58,21 @@ test('add multiple products to cart @with_rest_api', async ({ shopPageAuthentica
   await expect(shopPage.shopHeaderTotalPrice).toHaveText('Total Price: $0.00');
 
   // When
-  await shopPage.addProductToCart('Cucumber');
-  await shopPage.addProductToCart('Eggs');
-  await shopPage.addProductToCart('Kiwi');
-  await shopPage.addProductToCart('Juice');
+  await shopPage.addProductToCart('Blackberries (Organic)');
+  await shopPage.addProductToCart('Organic Baby Spinach');
+  await shopPage.addProductToCart('Exotic Dragonfruit');
+  await shopPage.addProductToCart('Golden Kiwis');
 
   // Then
   await expect(shopPage.shopHeaderTotalItems).toHaveText('Total Items: 4');
-  await expect(shopPage.shopHeaderTotalPrice).toHaveText('Total Price: $10.96');
+  await expect(shopPage.shopHeaderTotalPrice).toHaveText('Total Price: $16.06');
 });
 
 test('change number of product items in cart @with_rest_api', async ({ shopPageAuthenticated }) => {
   // Given
   const shopPage = shopPageAuthenticated;
 
-  const productName = 'Kiwi';
+  const productName = 'Calypso Mangoes';
 
   await shopPage.addProductToCart(productName);
   await shopPage.viewCart();
@@ -98,7 +98,7 @@ test('remove product item from cart @with_rest_api', async ({ shopPageAuthentica
   // Given
   const shopPage = shopPageAuthenticated;
 
-  const productName = 'Kiwi';
+  const productName = 'Calypso Mangoes';
 
   await shopPage.addProductToCart(productName);
   await shopPage.viewCart();
@@ -120,23 +120,23 @@ test('place order @with_rest_api @e2e', async ({ shopPage }) => {
   // Given
   const productsToOrder = [
     {
-      productName: 'Kiwi',
+      productName: 'Golden Kiwis',
       quantity: 3, // 0 <= quantity
       quantityByDropdown: false
     },
     {
-      productName: 'Juice',
+      productName: 'Sun-Ripened Cherry Tomatoes',
       quantity: 5,
       quantityByDropdown: true
     },
     {
-      productName: 'Cucumber',
+      productName: 'Jumbo Asparagus Spear',
       quantity: 1,
       quantityByDropdown: null
     }
   ];
   const totalQuantity = 9;
-  const totalPrice = '$28.91';
+  const totalPrice = '$27.81';
 
   // When
   for (const product of productsToOrder) {

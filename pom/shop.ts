@@ -56,7 +56,7 @@ export class ShopPage {
   }
 
   productCartItemQuantityDropdown(productName: string) {
-    return this.productCartItem(productName).getByRole('button', { name: 'Item Quantity' });
+    return this.productCartItem(productName).getByRole('combobox', { name: 'Item Quantity' });
   }
 
   async changeQuantityOfProduct(productName: string, quantity: number) {
