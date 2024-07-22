@@ -1,8 +1,8 @@
-import { Locator, Page } from '@playwright/test';
-import { RELATIVE_URL } from '../playwright.config';
+import { Locator, Page } from "@playwright/test";
+import { RELATIVE_URL } from "../playwright.config";
 
 export class ShopPage {
-  url = RELATIVE_URL + '/shop';
+  url = RELATIVE_URL + "/shop";
   readonly page: Page;
   readonly viewCartBtn: Locator;
   readonly browseProductsBtn: Locator;
@@ -16,15 +16,15 @@ export class ShopPage {
 
   constructor(page: Page) {
     this.page = page;
-    this.viewCartBtn = page.getByRole('button', { name: 'View Cart' });
-    this.browseProductsBtn = page.getByRole('button', { name: 'Browse Products' });
-    this.emptyCartText = page.getByText('There\'s nothing in your cart!');
-    this.productCards = page.getByTestId('product-card');
-    this.shopHeaderTotalItems = page.getByTestId('shop-header-total-items');
-    this.shopHeaderTotalPrice = page.getByTestId('shop-header-total-price');
-    this.cartProducts = page.getByRole('listitem');
-    this.placeOrderBtn = page.getByRole('button', { name: 'Place Order' });
-    this.afterOrderText = page.getByText('Thank you for your order.');
+    this.viewCartBtn = page.getByRole("button", { name: "View Cart" });
+    this.browseProductsBtn = page.getByRole("button", { name: "Browse Products" });
+    this.emptyCartText = page.getByText("There's nothing in your cart!");
+    this.productCards = page.getByTestId("product-card");
+    this.shopHeaderTotalItems = page.getByTestId("shop-header-total-items");
+    this.shopHeaderTotalPrice = page.getByTestId("shop-header-total-price");
+    this.cartProducts = page.getByRole("listitem");
+    this.placeOrderBtn = page.getByRole("button", { name: "Place Order" });
+    this.afterOrderText = page.getByText("Thank you for your order.");
   }
 
   async navigate() {
@@ -44,7 +44,7 @@ export class ShopPage {
   }
 
   productCardBtn(productName: string) {
-    return this.productCard(productName).getByRole('button');
+    return this.productCard(productName).getByRole("button");
   }
 
   async addProductToCart(productName: string) {
@@ -56,24 +56,24 @@ export class ShopPage {
   }
 
   productCartItemQuantityDropdown(productName: string) {
-    return this.productCartItem(productName).getByRole('combobox', { name: 'Item Quantity' });
+    return this.productCartItem(productName).getByRole("combobox", { name: "Item Quantity" });
   }
 
   async changeQuantityOfProduct(productName: string, quantity: number) {
     await this.productCartItemQuantityDropdown(productName).click();
-    await this.page.getByRole('option', { name: quantity.toString() }).first().click();
+    await this.page.getByRole("option", { name: quantity.toString() }).first().click();
   }
 
   productCartItemBadge(productName: string) {
-    return this.productCartItem(productName).locator('span.MuiBadge-badge');
+    return this.productCartItem(productName).locator("span.MuiBadge-badge");
   }
 
   productCartItemSubtotalPrice(productName: string) {
-    return this.productCartItem(productName).getByText('Subtotal Price');
+    return this.productCartItem(productName).getByText("Subtotal Price");
   }
 
   productCartItemRemoveBtn(productName: string) {
-    return this.productCartItem(productName).getByRole('button', { name: 'Remove Item From Cart' });
+    return this.productCartItem(productName).getByRole("button", { name: "Remove Item From Cart" });
   }
 
   async removeProductFromCart(productName: string) {

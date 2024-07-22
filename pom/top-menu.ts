@@ -1,4 +1,4 @@
-import { Locator, Page } from '@playwright/test';
+import { Locator, Page } from "@playwright/test";
 
 export class TopMenuFragment {
   readonly page: Page;
@@ -6,7 +6,7 @@ export class TopMenuFragment {
 
   constructor(page: Page) {
     this.page = page;
-    this.hamburgerBtn = page.getByRole('button').first();
+    this.hamburgerBtn = page.getByRole("button").first();
   }
 
   async openMenu() {

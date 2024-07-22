@@ -1,6 +1,6 @@
-import { Locator, Page } from '@playwright/test';
-import { ShopPage } from './shop';
-import { TodosPage } from './todos';
+import { Locator, Page } from "@playwright/test";
+import { ShopPage } from "./shop";
+import { TodosPage } from "./todos";
 
 export class LeftMenuFragment {
   readonly page: Page;
@@ -10,9 +10,9 @@ export class LeftMenuFragment {
 
   constructor(page: Page) {
     this.page = page;
-    this.homeLink = page.getByRole('link', { name: 'Home' });
-    this.shopLink = page.getByRole('link', { name: 'Shop' });
-    this.todosLink = page.getByRole('link', { name: 'TODOs' });
+    this.homeLink = page.getByRole("link", { name: "Home" });
+    this.shopLink = page.getByRole("link", { name: "Shop" });
+    this.todosLink = page.getByRole("link", { name: "TODOs" });
   }
 
   async clickHomeLink() {

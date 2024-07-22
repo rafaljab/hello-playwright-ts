@@ -1,8 +1,8 @@
-import { Locator, Page } from '@playwright/test';
-import { RELATIVE_URL } from '../playwright.config';
+import { Locator, Page } from "@playwright/test";
+import { RELATIVE_URL } from "../playwright.config";
 
 export class LoginPage {
-  url = RELATIVE_URL + '/login';
+  url = RELATIVE_URL + "/login";
   readonly page: Page;
   readonly emailField: Locator;
   readonly passField: Locator;
@@ -11,8 +11,8 @@ export class LoginPage {
 
   constructor(page: Page) {
     this.page = page;
-    this.emailField = page.locator('#email');
-    this.passField = page.locator('#password');
+    this.emailField = page.locator("#email");
+    this.passField = page.locator("#password");
     this.loginBtn = page.locator('button[type="submit"]');
     this.alertNotification = page.locator('div[role="alert"]');
   }

@@ -1,8 +1,8 @@
-import { Locator, Page } from '@playwright/test';
-import { RELATIVE_URL } from '../playwright.config';
+import { Locator, Page } from "@playwright/test";
+import { RELATIVE_URL } from "../playwright.config";
 
 export class TodosPage {
-  url = RELATIVE_URL + '/todos';
+  url = RELATIVE_URL + "/todos";
   readonly page: Page;
   readonly newTaskInputField: Locator;
   readonly addTaskBtn: Locator;
@@ -12,11 +12,11 @@ export class TodosPage {
 
   constructor(page: Page) {
     this.page = page;
-    this.newTaskInputField = page.getByRole('textbox');
-    this.addTaskBtn = page.getByRole('button', { name: 'ADD TASK' });
-    this.clearTasksBtn = page.getByRole('button', { name: 'CLEAR COMPLETED TASKS' });
-    this.todoItems = page.getByTestId('todo-item');
-    this.noTodosParagraph = page.getByRole('paragraph').filter({ hasText: 'There are no TODOs!' });
+    this.newTaskInputField = page.getByRole("textbox");
+    this.addTaskBtn = page.getByRole("button", { name: "ADD TASK" });
+    this.clearTasksBtn = page.getByRole("button", { name: "CLEAR COMPLETED TASKS" });
+    this.todoItems = page.getByTestId("todo-item");
+    this.noTodosParagraph = page.getByRole("paragraph").filter({ hasText: "There are no TODOs!" });
   }
 
   async navigate() {
@@ -33,7 +33,7 @@ export class TodosPage {
   }
 
   todoItemCheckbox(todoName: string) {
-    return this.todoItem(todoName).getByRole('checkbox');
+    return this.todoItem(todoName).getByRole("checkbox");
   }
 
   async toggleTodoItem(todoName: string) {

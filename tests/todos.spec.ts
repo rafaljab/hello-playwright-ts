@@ -1,14 +1,10 @@
-import { test, expect } from '../base';
+import { test, expect } from "../base";
 
-test('add todos', async ({ todosPageAuthenticated }) => {
+test("add todos", async ({ todosPageAuthenticated }) => {
   // Given
   const todosPage = todosPageAuthenticated;
 
-  const tasks = [
-    'Buy milk',
-    'Go for a walk',
-    'Wash the dishes'
-  ];
+  const tasks = ["Buy milk", "Go for a walk", "Wash the dishes"];
 
   await expect(todosPage.noTodosParagraph).toBeVisible();
   await expect(todosPage.todoItems).toBeHidden();
@@ -19,42 +15,34 @@ test('add todos', async ({ todosPageAuthenticated }) => {
   }
 
   // Then
-  await expect(await todosPage.todoItems.count() === tasks.length).toBeTruthy();
+  await expect((await todosPage.todoItems.count()) === tasks.length).toBeTruthy();
   for (const todoText of await todosPage.todoItems.allTextContents()) {
     expect(tasks.includes(todoText)).toBeTruthy();
   }
 });
 
-test('load todos from states', async ({ todosPageWithState }) => {
+test("load todos from states", async ({ todosPageWithState }) => {
   // Given
   const todosPage = todosPageWithState;
 
-  const tasks = [
-    'Buy milk',
-    'Go for a walk',
-    'Wash the dishes'
-  ];
+  const tasks = ["Buy milk", "Go for a walk", "Wash the dishes"];
 
   await expect(todosPage.todoItems.first()).toBeVisible();
 
   // When
 
   // Then
-  await expect(await todosPage.todoItems.count() === tasks.length).toBeTruthy();
+  await expect((await todosPage.todoItems.count()) === tasks.length).toBeTruthy();
   for (const todoText of await todosPage.todoItems.allTextContents()) {
     expect(tasks.includes(todoText)).toBeTruthy();
   }
 });
 
-test('toggle todos', async ({ todosPageWithState }) => {
+test("toggle todos", async ({ todosPageWithState }) => {
   // Given
   const todosPage = todosPageWithState;
 
-  const tasks = [
-    'Buy milk',
-    'Go for a walk',
-    'Wash the dishes'
-  ];
+  const tasks = ["Buy milk", "Go for a walk", "Wash the dishes"];
 
   await expect(todosPage.todoItemCheckbox(tasks[0])).not.toBeChecked();
 
@@ -71,15 +59,11 @@ test('toggle todos', async ({ todosPageWithState }) => {
   await expect(todosPage.todoItemCheckbox(tasks[0])).not.toBeChecked();
 });
 
-test('clear todos', async ({ todosPageWithState }) => {
+test("clear todos", async ({ todosPageWithState }) => {
   // Given
   const todosPage = todosPageWithState;
 
-  const tasks = [
-    'Buy milk',
-    'Go for a walk',
-    'Wash the dishes'
-  ];
+  const tasks = ["Buy milk", "Go for a walk", "Wash the dishes"];
 
   await expect(todosPage.todoItemCheckbox(tasks[0])).toBeVisible();
   await expect(todosPage.todoItemCheckbox(tasks[1])).toBeVisible();
@@ -104,13 +88,9 @@ test('clear todos', async ({ todosPageWithState }) => {
   await expect(todosPage.todoItemCheckbox(tasks[2])).toBeVisible();
 });
 
-test('todos @e2e', async ({ todosPage }) => {
+test("todos @e2e", async ({ todosPage }) => {
   // Given
-  const tasks = [
-    'Buy milk',
-    'Go for a walk',
-    'Wash the dishes'
-  ];
+  const tasks = ["Buy milk", "Go for a walk", "Wash the dishes"];
 
   await expect(todosPage.noTodosParagraph).toBeVisible();
 
