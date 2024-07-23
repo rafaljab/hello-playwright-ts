@@ -15,4 +15,14 @@ module.exports = {
     project: true,
     tsconfigRootDir: __dirname,
   },
+  rules: {
+    "no-console": 0,
+    "no-restricted-syntax": [
+      "error",
+      {
+        selector: "CallExpression[callee.property.name='only']",
+        message: "Do not leave .only on tests!",
+      },
+    ],
+  },
 };
