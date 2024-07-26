@@ -1,18 +1,19 @@
 {
   "compilerOptions": {
-    "target": "es2020",
+    "target": "es2022",
     "module": "commonjs",
-    "outDir": "./build",
     "strict": true,
+    "noEmit": false,
     "esModuleInterop": true,
     "skipLibCheck": true,
     "sourceMap": true,
     "declaration": true,
     "baseUrl": ".",
     "resolveJsonModule": true,
+    "forceConsistentCasingInFileNames": true,
     "lib": ["esnext", "dom"],
     "types": ["node", "@types/jest", "playwright"]
   },
   "include": ["**/*.ts"],
-  "exclude": ["node_modules", "build"]
+  "exclude": ["node_modules"]
 }
