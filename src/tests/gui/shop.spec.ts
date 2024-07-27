@@ -1,9 +1,11 @@
-import { test, expect } from "../base";
+import { test, expect } from "@base/gui/base";
 
-test("open empty cart", async ({ shopPageAuthenticated }) => {
+test.beforeEach("go to shop page", async ({ shopPage }) => {
+  await shopPage.navigate();
+});
+
+test("open empty cart", async ({ shopPage }) => {
   // Given
-  const shopPage = shopPageAuthenticated;
-
   await expect(shopPage.emptyCartText).toBeHidden();
 
   // When
@@ -32,10 +34,7 @@ const orders = [
   },
 ];
 for (const order of orders) {
-  test(`add product to cart - ${order.productName} @with_rest_api`, async ({ shopPageAuthenticated }) => {
-    // Given
-    const shopPage = shopPageAuthenticated;
-
+  test(`add product to cart - ${order.productName} @with_rest_api`, async ({ shopPage }) => {
     await expect(shopPage.productCardBtn(order.productName)).toHaveAttribute("title", "Add Product");
     await expect(shopPage.shopHeaderTotalItems).toHaveText("Total Items: 0");
     await expect(shopPage.shopHeaderTotalPrice).toHaveText("Total Price: $0.00");
@@ -50,10 +49,8 @@ for (const order of orders) {
   });
 }
 
-test("add multiple products to cart @with_rest_api", async ({ shopPageAuthenticated }) => {
+test("add multiple products to cart @with_rest_api", async ({ shopPage }) => {
   // Given
-  const shopPage = shopPageAuthenticated;
-
   await expect(shopPage.shopHeaderTotalItems).toHaveText("Total Items: 0");
   await expect(shopPage.shopHeaderTotalPrice).toHaveText("Total Price: $0.00");
 
@@ -68,10 +65,8 @@ test("add multiple products to cart @with_rest_api", async ({ shopPageAuthentica
   await expect(shopPage.shopHeaderTotalPrice).toHaveText("Total Price: $16.06");
 });
 
-test("change number of product items in cart @with_rest_api", async ({ shopPageAuthenticated }) => {
+test("change number of product items in cart @with_rest_api", async ({ shopPage }) => {
   // Given
-  const shopPage = shopPageAuthenticated;
-
   const productName = "Calypso Mangoes";
 
   await shopPage.addProductToCart(productName);
@@ -94,10 +89,8 @@ test("change number of product items in cart @with_rest_api", async ({ shopPageA
   await expect(shopPage.productCartItemSubtotalPrice(productName)).toHaveText("Subtotal Price: $24.90");
 });
 
-test("remove product item from cart @with_rest_api", async ({ shopPageAuthenticated }) => {
+test("remove product item from cart @with_rest_api", async ({ shopPage }) => {
   // Given
-  const shopPage = shopPageAuthenticated;
-
   const productName = "Calypso Mangoes";
 
   await shopPage.addProductToCart(productName);
@@ -116,58 +109,74 @@ test("remove product item from cart @with_rest_api", async ({ shopPageAuthentica
   await expect(shopPage.placeOrderBtn).toBeDisabled();
 });
 
-test("place order @with_rest_api @e2e", async ({ shopPage }) => {
-  // Given
-  const productsToOrder = [
-    {
-      productName: "Golden Kiwis",
-      quantity: 3, // 0 <= quantity
-      quantityByDropdown: false,
-    },
-    {
-      productName: "Sun-Ripened Cherry Tomatoes",
-      quantity: 5,
-      quantityByDropdown: true,
-    },
-    {
-      productName: "Jumbo Asparagus Spear",
-      quantity: 1,
-      quantityByDropdown: null,
-    },
-  ];
-  const totalQuantity = 9;
-  const totalPrice = "$27.81";
+test.describe("e2e tests", () => {
+  test.use({ storageState: { cookies: [], origins: [] } });
 
-  // When
-  for (const product of productsToOrder) {
-    await shopPage.addProductToCart(product.productName);
+  test(
+    "place order",
+    {
+      tag: ["@with_rest_api", "@e2e"],
+    },
+    async ({ login, topMenuFragment, leftMenuFragment, shopPage }) => {
+      // Given
+      const productsToOrder = [
+        {
+          productName: "Golden Kiwis",
+          quantity: 3, // 0 <= quantity
+          quantityByDropdown: false,
+        },
+        {
+          productName: "Sun-Ripened Cherry Tomatoes",
+          quantity: 5,
+          quantityByDropdown: true,
+        },
+        {
+          productName: "Jumbo Asparagus Spear",
+          quantity: 1,
+          quantityByDropdown: null,
+        },
+      ];
+      const totalQuantity = 9;
+      const totalPrice = "$27.81";
 
-    // eslint-disable-next-line playwright/no-conditional-in-test
-    if (product.quantityByDropdown === true || product.quantityByDropdown === null) {
-      await shopPage.viewCart();
-      // eslint-disable-next-line playwright/no-conditional-in-test
-      if (product.quantity > 0) {
-        await shopPage.changeQuantityOfProduct(product.productName, product.quantity);
-      } else {
-        await shopPage.removeProductFromCart(product.productName);
-      }
-      await shopPage.browseProducts();
-    } else {
-      for (let i = 0; i < product.quantity - 1; i++) {
+      await test.step("login and go to shop page", () => {
+        login;
+        topMenuFragment.openMenu();
+        leftMenuFragment.clickShopLink();
+      });
+
+      // When
+      for (const product of productsToOrder) {
         await shopPage.addProductToCart(product.productName);
+
+        // eslint-disable-next-line playwright/no-conditional-in-test
+        if (product.quantityByDropdown === true || product.quantityByDropdown === null) {
+          await shopPage.viewCart();
+          // eslint-disable-next-line playwright/no-conditional-in-test
+          if (product.quantity > 0) {
+            await shopPage.changeQuantityOfProduct(product.productName, product.quantity);
+          } else {
+            await shopPage.removeProductFromCart(product.productName);
+          }
+          await shopPage.browseProducts();
+        } else {
+          for (let i = 0; i < product.quantity - 1; i++) {
+            await shopPage.addProductToCart(product.productName);
+          }
+        }
       }
-    }
-  }
 
-  await shopPage.viewCart();
+      await shopPage.viewCart();
 
-  await expect(shopPage.shopHeaderTotalItems).toHaveText(`Total Items: ${totalQuantity}`);
-  await expect(shopPage.shopHeaderTotalPrice).toHaveText(`Total Price: ${totalPrice}`);
+      await expect(shopPage.shopHeaderTotalItems).toHaveText(`Total Items: ${totalQuantity}`);
+      await expect(shopPage.shopHeaderTotalPrice).toHaveText(`Total Price: ${totalPrice}`);
 
-  await shopPage.placeOrder();
+      await shopPage.placeOrder();
 
-  // Then
-  await expect(shopPage.shopHeaderTotalItems).toHaveText("Total Items: 0");
-  await expect(shopPage.shopHeaderTotalPrice).toHaveText("Total Price: $0.00");
-  await expect(shopPage.afterOrderText).toBeVisible();
+      // Then
+      await expect(shopPage.shopHeaderTotalItems).toHaveText("Total Items: 0");
+      await expect(shopPage.shopHeaderTotalPrice).toHaveText("Total Price: $0.00");
+      await expect(shopPage.afterOrderText).toBeVisible();
+    },
+  );
 });

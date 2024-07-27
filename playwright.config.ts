@@ -8,12 +8,14 @@ import * as dotenv from "dotenv";
 dotenv.config();
 
 export const RELATIVE_URL = "/gui-automation-playground";
+export const STORAGE_STATE_PATH = "./src/test-data/.storage-state/";
+export const authUserStorageStateFile = STORAGE_STATE_PATH + "authenticated-user.json";
 
 /**
  * See https://playwright.dev/docs/test-configuration.
  */
 export default defineConfig({
-  testDir: "./tests",
+  testDir: "./src/tests",
   /* Maximum time one test can run for. */
   timeout: 30 * 1000,
   expect: {
@@ -47,9 +49,12 @@ export default defineConfig({
 
   /* Configure projects for major browsers */
   projects: [
+    { name: "setup", testMatch: /.*\.setup\.ts/ },
+
     {
       name: "chromium",
-      use: { ...devices["Desktop Chrome"] },
+      use: { ...devices["Desktop Chrome"], storageState: authUserStorageStateFile },
+      dependencies: ["setup"],
     },
 
     // {

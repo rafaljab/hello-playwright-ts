@@ -4,8 +4,16 @@
     "moduleResolution": "Node",
     "resolveJsonModule": true,
     "esModuleInterop": true,
+    "target": "ES5",
+    "experimentalDecorators": true,
     "baseUrl": ".",
-    "types": ["node", "playwright"]
+    "types": ["node", "playwright"],
+    "paths": {
+      "@playwright.config": ["./playwright.config"],
+      "@pages/*": ["./src/pages/*"],
+      "@base/*": ["./src/base/*"],
+      "@test-data/*": ["./src/test-data/*"]
+    }
   },
   "include": ["**/*.ts"],
   "exclude": ["node_modules"]

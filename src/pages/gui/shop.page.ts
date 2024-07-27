@@ -1,9 +1,9 @@
-import { Locator, Page } from "@playwright/test";
-import { RELATIVE_URL } from "../playwright.config";
+import { type Locator, type Page } from "@playwright/test";
+import { BasePage } from "@base/gui/base.page";
+import { RELATIVE_URL } from "@playwright.config";
 
-export class ShopPage {
-  url = RELATIVE_URL + "/shop";
-  readonly page: Page;
+export class ShopPage extends BasePage {
+  readonly url = RELATIVE_URL + "/shop";
   readonly viewCartBtn: Locator;
   readonly browseProductsBtn: Locator;
   readonly emptyCartText: Locator;
@@ -15,7 +15,8 @@ export class ShopPage {
   readonly afterOrderText: Locator;
 
   constructor(page: Page) {
-    this.page = page;
+    super(page);
+
     this.viewCartBtn = page.getByRole("button", { name: "View Cart" });
     this.browseProductsBtn = page.getByRole("button", { name: "Browse Products" });
     this.emptyCartText = page.getByText("There's nothing in your cart!");
@@ -25,10 +26,6 @@ export class ShopPage {
     this.cartProducts = page.getByRole("listitem");
     this.placeOrderBtn = page.getByRole("button", { name: "Place Order" });
     this.afterOrderText = page.getByText("Thank you for your order.");
-  }
-
-  async navigate() {
-    await this.page.goto(this.url);
   }
 
   async viewCart() {

@@ -13,3 +13,6 @@ Thumbs.db
 
 # Docs files
 *_spec3.json
+
+# Storage state is generated dynamically
+src/test-data/.storage-state/

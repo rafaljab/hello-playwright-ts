@@ -1,9 +1,9 @@
-import { Locator, Page } from "@playwright/test";
-import { RELATIVE_URL } from "../playwright.config";
+import { type Locator, type Page } from "@playwright/test";
+import { BasePage } from "@base/gui/base.page";
+import { RELATIVE_URL } from "@playwright.config";
 
-export class TodosPage {
-  url = RELATIVE_URL + "/todos";
-  readonly page: Page;
+export class TodosPage extends BasePage {
+  readonly url = RELATIVE_URL + "/todos";
   readonly newTaskInputField: Locator;
   readonly addTaskBtn: Locator;
   readonly clearTasksBtn: Locator;
@@ -11,16 +11,13 @@ export class TodosPage {
   readonly noTodosParagraph: Locator;
 
   constructor(page: Page) {
-    this.page = page;
+    super(page);
+
     this.newTaskInputField = page.getByRole("textbox");
     this.addTaskBtn = page.getByRole("button", { name: "ADD TASK" });
     this.clearTasksBtn = page.getByRole("button", { name: "CLEAR COMPLETED TASKS" });
     this.todoItems = page.getByTestId("todo-item");
     this.noTodosParagraph = page.getByRole("paragraph").filter({ hasText: "There are no TODOs!" });
-  }
-
-  async navigate() {
-    await this.page.goto(this.url);
   }
 
   async addTask(taskName: string) {
