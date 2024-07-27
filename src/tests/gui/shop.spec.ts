@@ -140,7 +140,7 @@ test.describe("e2e tests", () => {
       const totalPrice = "$27.81";
 
       await test.step("login and go to shop page", () => {
-        login;
+        login();
         topMenuFragment.openMenu();
         leftMenuFragment.clickShopLink();
       });

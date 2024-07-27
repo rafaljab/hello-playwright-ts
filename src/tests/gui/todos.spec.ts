@@ -94,7 +94,7 @@ test.describe("e2e tests", () => {
   test("todos @e2e", async ({ login, topMenuFragment, leftMenuFragment, todosPage }) => {
     // Given
     await test.step("login and go to todos page", () => {
-      login;
+      login();
       topMenuFragment.openMenu();
       leftMenuFragment.clickTodosLink();
     });

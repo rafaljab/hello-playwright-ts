@@ -3,7 +3,7 @@ import { RELATIVE_URL, authUserStorageStateFile } from "@playwright.config";
 
 setup("authenticate user with correct data", async ({ loginPage, login }) => {
   // When
-  login;
+  login();
 
   // Then
   await expect(loginPage.page).toHaveURL(RELATIVE_URL);

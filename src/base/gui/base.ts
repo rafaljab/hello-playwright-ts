@@ -15,7 +15,7 @@ type Fixtures = {
   topMenuFragment: TopMenuFragment;
   leftMenuFragment: LeftMenuFragment;
 
-  login: void;
+  login: () => void;
 };
 
 export const test = baseTest.extend<Fixtures>({
@@ -40,9 +40,11 @@ export const test = baseTest.extend<Fixtures>({
   },
 
   login: async ({ loginPage }, use) => {
-    await loginPage.navigate();
-    await loginPage.login("admin@example.com", "admin123");
-    await use();
+    const login = async () => {
+      await loginPage.navigate();
+      await loginPage.login("admin@example.com", "admin123");
+    };
+    await use(login);
   },
 });
 
