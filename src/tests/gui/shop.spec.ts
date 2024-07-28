@@ -1,112 +1,115 @@
 import { test, expect } from "@base/gui/base";
+import { RELATIVE_URL } from "@playwright.config";
 
-test.beforeEach("go to shop page", async ({ shopPage }) => {
-  await shopPage.navigate();
-});
+test.describe("single functionality tests", async () => {
+  test.beforeEach("go to shop page", async ({ shopPage }) => {
+    await shopPage.navigate();
+  });
 
-test("open empty cart", async ({ shopPage }) => {
-  // Given
-  await expect(shopPage.emptyCartText).toBeHidden();
+  test("open empty cart", async ({ shopPage }) => {
+    // Given
+    await expect(shopPage.emptyCartText).toBeHidden();
 
-  // When
-  await shopPage.viewCart();
+    // When
+    await shopPage.viewCart();
 
-  // Then
-  await expect(shopPage.emptyCartText).toBeVisible();
-  await expect(shopPage.placeOrderBtn).toBeDisabled();
-});
+    // Then
+    await expect(shopPage.emptyCartText).toBeVisible();
+    await expect(shopPage.placeOrderBtn).toBeDisabled();
+  });
 
-const orders = [
-  {
-    productName: "Calypso Mangoes",
-    totalItems: 1,
-    totalPrice: "$2.49",
-  },
-  {
-    productName: "Honeycrisp Apples",
-    totalItems: 1,
-    totalPrice: "$1.99",
-  },
-  {
-    productName: "Large Avocados",
-    totalItems: 1,
-    totalPrice: "$2.29",
-  },
-];
-for (const order of orders) {
-  test(`add product to cart - ${order.productName} @with_rest_api`, async ({ shopPage }) => {
-    await expect(shopPage.productCardBtn(order.productName)).toHaveAttribute("title", "Add Product");
+  const orders = [
+    {
+      productName: "Calypso Mangoes",
+      totalItems: 1,
+      totalPrice: "$2.49",
+    },
+    {
+      productName: "Honeycrisp Apples",
+      totalItems: 1,
+      totalPrice: "$1.99",
+    },
+    {
+      productName: "Large Avocados",
+      totalItems: 1,
+      totalPrice: "$2.29",
+    },
+  ];
+  for (const order of orders) {
+    test(`add product to cart - ${order.productName} @with_rest_api`, async ({ shopPage }) => {
+      await expect(shopPage.productCardBtn(order.productName)).toHaveAttribute("title", "Add Product");
+      await expect(shopPage.shopHeaderTotalItems).toHaveText("Total Items: 0");
+      await expect(shopPage.shopHeaderTotalPrice).toHaveText("Total Price: $0.00");
+
+      // When
+      await shopPage.addProductToCart(order.productName);
+
+      // Then
+      await expect(shopPage.productCardBtn(order.productName)).toHaveAttribute("title", "Product In Cart");
+      await expect(shopPage.shopHeaderTotalItems).toHaveText(`Total Items: ${order.totalItems}`);
+      await expect(shopPage.shopHeaderTotalPrice).toHaveText(`Total Price: ${order.totalPrice}`);
+    });
+  }
+
+  test("add multiple products to cart @with_rest_api", async ({ shopPage }) => {
+    // Given
     await expect(shopPage.shopHeaderTotalItems).toHaveText("Total Items: 0");
     await expect(shopPage.shopHeaderTotalPrice).toHaveText("Total Price: $0.00");
 
     // When
-    await shopPage.addProductToCart(order.productName);
+    await shopPage.addProductToCart("Blackberries (Organic)");
+    await shopPage.addProductToCart("Organic Baby Spinach");
+    await shopPage.addProductToCart("Exotic Dragonfruit");
+    await shopPage.addProductToCart("Golden Kiwis");
 
     // Then
-    await expect(shopPage.productCardBtn(order.productName)).toHaveAttribute("title", "Product In Cart");
-    await expect(shopPage.shopHeaderTotalItems).toHaveText(`Total Items: ${order.totalItems}`);
-    await expect(shopPage.shopHeaderTotalPrice).toHaveText(`Total Price: ${order.totalPrice}`);
+    await expect(shopPage.shopHeaderTotalItems).toHaveText("Total Items: 4");
+    await expect(shopPage.shopHeaderTotalPrice).toHaveText("Total Price: $16.06");
   });
-}
 
-test("add multiple products to cart @with_rest_api", async ({ shopPage }) => {
-  // Given
-  await expect(shopPage.shopHeaderTotalItems).toHaveText("Total Items: 0");
-  await expect(shopPage.shopHeaderTotalPrice).toHaveText("Total Price: $0.00");
+  test("change number of product items in cart @with_rest_api", async ({ shopPage }) => {
+    // Given
+    const productName = "Calypso Mangoes";
 
-  // When
-  await shopPage.addProductToCart("Blackberries (Organic)");
-  await shopPage.addProductToCart("Organic Baby Spinach");
-  await shopPage.addProductToCart("Exotic Dragonfruit");
-  await shopPage.addProductToCart("Golden Kiwis");
+    await shopPage.addProductToCart(productName);
+    await shopPage.viewCart();
 
-  // Then
-  await expect(shopPage.shopHeaderTotalItems).toHaveText("Total Items: 4");
-  await expect(shopPage.shopHeaderTotalPrice).toHaveText("Total Price: $16.06");
-});
+    await expect(shopPage.shopHeaderTotalItems).toHaveText("Total Items: 1");
+    await expect(shopPage.shopHeaderTotalPrice).toHaveText("Total Price: $2.49");
+    await expect(shopPage.productCartItemBadge(productName)).toHaveText("1");
+    await expect(shopPage.productCartItemQuantityDropdown(productName)).toHaveText("1");
+    await expect(shopPage.productCartItemSubtotalPrice(productName)).toHaveText("Subtotal Price: $2.49");
 
-test("change number of product items in cart @with_rest_api", async ({ shopPage }) => {
-  // Given
-  const productName = "Calypso Mangoes";
+    // When
+    await shopPage.changeQuantityOfProduct(productName, 10);
 
-  await shopPage.addProductToCart(productName);
-  await shopPage.viewCart();
+    // Then
+    await expect(shopPage.shopHeaderTotalItems).toHaveText("Total Items: 10");
+    await expect(shopPage.shopHeaderTotalPrice).toHaveText("Total Price: $24.90");
+    await expect(shopPage.productCartItemBadge(productName)).toHaveText("10");
+    await expect(shopPage.productCartItemQuantityDropdown(productName)).toHaveText("10");
+    await expect(shopPage.productCartItemSubtotalPrice(productName)).toHaveText("Subtotal Price: $24.90");
+  });
 
-  await expect(shopPage.shopHeaderTotalItems).toHaveText("Total Items: 1");
-  await expect(shopPage.shopHeaderTotalPrice).toHaveText("Total Price: $2.49");
-  await expect(shopPage.productCartItemBadge(productName)).toHaveText("1");
-  await expect(shopPage.productCartItemQuantityDropdown(productName)).toHaveText("1");
-  await expect(shopPage.productCartItemSubtotalPrice(productName)).toHaveText("Subtotal Price: $2.49");
+  test("remove product item from cart @with_rest_api", async ({ shopPage }) => {
+    // Given
+    const productName = "Calypso Mangoes";
 
-  // When
-  await shopPage.changeQuantityOfProduct(productName, 10);
+    await shopPage.addProductToCart(productName);
+    await shopPage.viewCart();
 
-  // Then
-  await expect(shopPage.shopHeaderTotalItems).toHaveText("Total Items: 10");
-  await expect(shopPage.shopHeaderTotalPrice).toHaveText("Total Price: $24.90");
-  await expect(shopPage.productCartItemBadge(productName)).toHaveText("10");
-  await expect(shopPage.productCartItemQuantityDropdown(productName)).toHaveText("10");
-  await expect(shopPage.productCartItemSubtotalPrice(productName)).toHaveText("Subtotal Price: $24.90");
-});
+    await expect(shopPage.productCartItem(productName)).toBeVisible();
+    await expect(shopPage.emptyCartText).toBeHidden();
+    await expect(shopPage.placeOrderBtn).toBeEnabled();
 
-test("remove product item from cart @with_rest_api", async ({ shopPage }) => {
-  // Given
-  const productName = "Calypso Mangoes";
+    // When
+    await shopPage.removeProductFromCart(productName);
 
-  await shopPage.addProductToCart(productName);
-  await shopPage.viewCart();
-
-  await expect(shopPage.productCartItem(productName)).toBeVisible();
-  await expect(shopPage.emptyCartText).toBeHidden();
-  await expect(shopPage.placeOrderBtn).toBeEnabled();
-
-  // When
-  await shopPage.removeProductFromCart(productName);
-
-  // Then
-  await expect(shopPage.productCartItem(productName)).toBeHidden();
-  await expect(shopPage.emptyCartText).toBeVisible();
-  await expect(shopPage.placeOrderBtn).toBeDisabled();
+    // Then
+    await expect(shopPage.productCartItem(productName)).toBeHidden();
+    await expect(shopPage.emptyCartText).toBeVisible();
+    await expect(shopPage.placeOrderBtn).toBeDisabled();
+  });
 });
 
 test.describe("e2e tests", () => {
@@ -117,7 +120,7 @@ test.describe("e2e tests", () => {
     {
       tag: ["@with_rest_api", "@e2e"],
     },
-    async ({ login, topMenuFragment, leftMenuFragment, shopPage }) => {
+    async ({ login, loginPage, topMenuFragment, leftMenuFragment, shopPage }) => {
       // Given
       const productsToOrder = [
         {
@@ -139,10 +142,11 @@ test.describe("e2e tests", () => {
       const totalQuantity = 9;
       const totalPrice = "$27.81";
 
-      await test.step("login and go to shop page", () => {
+      await test.step("login and go to shop page", async () => {
         login();
-        topMenuFragment.openMenu();
-        leftMenuFragment.clickShopLink();
+        await expect(loginPage.page).toHaveURL(RELATIVE_URL);
+        await topMenuFragment.openMenu();
+        await leftMenuFragment.clickShopLink();
       });
 
       // When
