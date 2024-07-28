@@ -4,31 +4,38 @@ import tasks from "@test-data/todos/tasks.json";
 
 const todosStorageStateFile = STORAGE_STATE_PATH + "/todos.json";
 
-test.describe("single functionality tests", async () => {
+test.describe("basic tests", async () => {
   test.beforeEach("go to todos page", async ({ todosPage }) => {
     await todosPage.navigate();
   });
 
+  // Execute tests one by one - firstly, save storage state to use it in the next tests
   test.describe.configure({ mode: "serial" });
 
-  test("add todos", async ({ todosPage }) => {
-    // Given
-    await expect(todosPage.noTodosParagraph).toBeVisible();
-    await expect(todosPage.todoItems).toBeHidden();
+  test(
+    "add todos",
+    {
+      tag: ["@setup", "@without_storage_state"],
+    },
+    async ({ todosPage }) => {
+      // Given
+      await expect(todosPage.noTodosParagraph).toBeVisible();
+      await expect(todosPage.todoItems).toBeHidden();
 
-    // When
-    for (const task of tasks) {
-      await todosPage.addTask(task);
-    }
+      // When
+      for (const task of tasks) {
+        await todosPage.addTask(task);
+      }
 
-    // Then
-    expect((await todosPage.todoItems.count()) === tasks.length).toBeTruthy();
-    for (const todoText of await todosPage.todoItems.allTextContents()) {
-      expect(tasks.includes(todoText)).toBeTruthy();
-    }
+      // Then
+      expect((await todosPage.todoItems.count()) === tasks.length).toBeTruthy();
+      for (const todoText of await todosPage.todoItems.allTextContents()) {
+        expect(tasks.includes(todoText)).toBeTruthy();
+      }
 
-    await todosPage.page.context().storageState({ path: todosStorageStateFile });
-  });
+      await todosPage.page.context().storageState({ path: todosStorageStateFile });
+    },
+  );
 
   test.describe("with predefined state", async () => {
     test.use({ storageState: todosStorageStateFile });
@@ -90,10 +97,10 @@ test.describe("single functionality tests", async () => {
   });
 });
 
-test.describe("e2e tests", () => {
+test.describe("e2e tests", { tag: ["@without_storage_state", "@e2e"] }, () => {
   test.use({ storageState: { cookies: [], origins: [] } });
 
-  test("todos @e2e", async ({ login, loginPage, topMenuFragment, leftMenuFragment, todosPage }) => {
+  test("todos", async ({ login, loginPage, topMenuFragment, leftMenuFragment, todosPage }) => {
     // Given
     await test.step("login and go to todos page", async () => {
       login();
