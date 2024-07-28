@@ -12,10 +12,10 @@ export class LoginPage extends BasePage {
   constructor(page: Page) {
     super(page);
 
-    this.emailField = page.locator("#email");
-    this.passField = page.locator("#password");
-    this.loginBtn = page.locator('button[type="submit"]');
-    this.alertNotification = page.locator('div[role="alert"]');
+    this.emailField = page.getByRole("textbox", { name: "Email Address" });
+    this.passField = page.getByRole("textbox", { name: "Password" });
+    this.loginBtn = page.getByRole("button", { name: "LOG IN" });
+    this.alertNotification = page.getByRole("alert");
   }
 
   async login(email: string, password: string) {
