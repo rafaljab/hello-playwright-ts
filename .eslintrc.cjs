@@ -17,6 +17,8 @@ module.exports = {
   },
   rules: {
     "no-console": 0,
+    "@typescript-eslint/no-floating-promises": "error",
+    "@typescript-eslint/await-thenable": "error",
     "no-restricted-syntax": [
       "error",
       {
