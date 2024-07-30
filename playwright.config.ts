@@ -1,5 +1,6 @@
 import { defineConfig, devices } from "@playwright/test";
 import * as dotenv from "dotenv";
+import { envConfig } from "./conf/env";
 
 /**
  * Read environment variables from file.
@@ -7,6 +8,21 @@ import * as dotenv from "dotenv";
  */
 dotenv.config();
 
+// Set environment-specific variables
+const ENV = process.env.ENV;
+if (!ENV || !["local", "prod"].includes(ENV)) {
+  console.log(
+    `
+    Incorrect environment value (ENV) was provided.
+    Make sure the ENV variable is defined correctly.
+    You can define it in the .env file or add it before calling the command (e.g. 'ENV=local <command>').
+    Available options: local|prod.
+    `,
+  );
+  process.exit();
+}
+
+export const GUI_BASE_URL = envConfig[ENV].guiBaseUrl;
 export const RELATIVE_URL = "/gui-automation-playground";
 export const STORAGE_STATE_PATH = "./src/test-data/.storage-state/";
 export const authUserStorageStateFile = STORAGE_STATE_PATH + "authenticated-user.json";
@@ -52,7 +68,7 @@ export default defineConfig({
     actionTimeout: 0,
 
     /* Base URL to use in actions like `await page.goto('/')`. */
-    baseURL: process.env.BASE_URL,
+    baseURL: GUI_BASE_URL,
 
     headless: true,
 

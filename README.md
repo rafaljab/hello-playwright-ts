@@ -48,11 +48,7 @@ npx playwright install
 ```
 
 Create an `.env` file in the root directory (`hello-playwright-ts`).
-This file is ignored by Git and should contain a variable for the domain:
-
-```
-BASE_URL=https://rafaljab.github.io
-```
+This file is ignored by Git and should contain variables as in sample `.env.dist` file.
 
 You're all set!
 
