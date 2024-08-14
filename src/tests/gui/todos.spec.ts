@@ -33,6 +33,7 @@ test.describe("basic tests", async () => {
         expect(tasks.includes(todoText)).toBeTruthy();
       }
 
+      // Save storage state
       await todosPage.page.context().storageState({ path: todosStorageStateFile });
     },
   );
@@ -43,8 +44,6 @@ test.describe("basic tests", async () => {
     test("load todos from states", async ({ todosPage }) => {
       // Given
       await expect(todosPage.todoItems.first()).toBeVisible();
-
-      // When
 
       // Then
       expect((await todosPage.todoItems.count()) === tasks.length).toBeTruthy();
