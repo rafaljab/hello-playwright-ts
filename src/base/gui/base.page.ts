@@ -3,7 +3,7 @@ import { RELATIVE_URL } from "@playwright.config";
 
 export abstract class BasePage {
   readonly page: Page;
-  readonly url = RELATIVE_URL + "/";
+  readonly url: string = RELATIVE_URL;
 
   protected constructor(page: Page) {
     this.page = page;

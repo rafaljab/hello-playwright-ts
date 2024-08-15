@@ -3,7 +3,8 @@ import { BasePage } from "@base/gui/base.page";
 import { RELATIVE_URL } from "@playwright.config";
 
 export class TodosPage extends BasePage {
-  readonly url = RELATIVE_URL + "/todos";
+  readonly url: string = `${RELATIVE_URL}/todos`;
+
   readonly newTaskInputField: Locator;
   readonly addTaskBtn: Locator;
   readonly clearTasksBtn: Locator;

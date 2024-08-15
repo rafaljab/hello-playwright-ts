@@ -3,7 +3,8 @@ import { BasePage } from "@base/gui/base.page";
 import { RELATIVE_URL } from "@playwright.config";
 
 export class LoginPage extends BasePage {
-  readonly url = RELATIVE_URL + "/login";
+  readonly url: string = `${RELATIVE_URL}/login`;
+
   readonly emailField: Locator;
   readonly passField: Locator;
   readonly loginBtn: Locator;

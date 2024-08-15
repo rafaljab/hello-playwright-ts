@@ -3,7 +3,8 @@ import { BasePage } from "@base/gui/base.page";
 import { RELATIVE_URL } from "@playwright.config";
 
 export class ShopPage extends BasePage {
-  readonly url = RELATIVE_URL + "/shop";
+  readonly url: string = `${RELATIVE_URL}/shop`;
+
   readonly viewCartBtn: Locator;
   readonly browseProductsBtn: Locator;
   readonly emptyCartText: Locator;
