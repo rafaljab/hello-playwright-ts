@@ -1,5 +1,5 @@
 import { test, expect } from "@base/gui/base";
-import { STORAGE_STATE_PATH } from "@playwright.config";
+import { RELATIVE_URL, STORAGE_STATE_PATH } from "@playwright.config";
 import tasks from "@test-data/todos/tasks.json";
 
 const todosStorageStateFile = STORAGE_STATE_PATH + "/todos.json";
@@ -86,10 +86,11 @@ test.describe("basic tests", async () => {
 test.describe("e2e tests", { tag: ["@without_storage_state", "@e2e"] }, () => {
   test.use({ storageState: { cookies: [], origins: [] } });
 
-  test("todos", async ({ login, topMenuFragment, leftMenuFragment, todosPage }) => {
+  test("todos", async ({ login, homePage, topMenuFragment, leftMenuFragment, todosPage }) => {
     // Given
     await test.step("Login and go to todos page", async () => {
       login();
+      await expect(homePage.page).toHaveURL(RELATIVE_URL);
       await topMenuFragment.openMenu();
       await leftMenuFragment.clickTodosLink();
     });
