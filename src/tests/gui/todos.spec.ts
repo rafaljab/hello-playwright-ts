@@ -1,5 +1,5 @@
 import { test, expect } from "@base/gui/base";
-import { RELATIVE_URL, STORAGE_STATE_PATH } from "@playwright.config";
+import { STORAGE_STATE_PATH } from "@playwright.config";
 import tasks from "@test-data/todos/tasks.json";
 
 const todosStorageStateFile = STORAGE_STATE_PATH + "/todos.json";
@@ -18,20 +18,14 @@ test.describe("basic tests", async () => {
       tag: ["@setup", "@without_storage_state"],
     },
     async ({ todosPage }) => {
-      // Given
-      await expect(todosPage.noTodosParagraph).toBeVisible();
-      await expect(todosPage.todoItems).toBeHidden();
+      // Given an empty todos list
+      await todosPage.verifyThereAreNoTodos();
 
-      // When
-      for (const task of tasks) {
-        await todosPage.addTask(task);
-      }
+      // When I add tasks
+      await todosPage.addTasks(tasks);
 
-      // Then
-      expect((await todosPage.todoItems.count()) === tasks.length).toBeTruthy();
-      for (const todoText of await todosPage.todoItems.allTextContents()) {
-        expect(tasks.includes(todoText)).toBeTruthy();
-      }
+      // Then those tasks are visible
+      await todosPage.verifyTodoList(tasks);
 
       // Save storage state
       await todosPage.page.context().storageState({ path: todosStorageStateFile });
@@ -46,52 +40,45 @@ test.describe("basic tests", async () => {
       await expect(todosPage.todoItems.first()).toBeVisible();
 
       // Then
-      expect((await todosPage.todoItems.count()) === tasks.length).toBeTruthy();
-      for (const todoText of await todosPage.todoItems.allTextContents()) {
-        expect(tasks.includes(todoText)).toBeTruthy();
-      }
+      await todosPage.verifyTodoList(tasks);
     });
 
     test("toggle todos", async ({ todosPage }) => {
       // Given
-      await expect(todosPage.todoItemCheckbox(tasks[0])).not.toBeChecked();
+      await todosPage.verifyTodoItemIsNotChecked(tasks[0]);
 
       // When
       await todosPage.toggleTodoItem(tasks[0]);
 
       // Then
-      await expect(todosPage.todoItemCheckbox(tasks[0])).toBeChecked();
+      await todosPage.verifyTodoItemIsChecked(tasks[0]);
 
       // When
       await todosPage.toggleTodoItem(tasks[0]);
 
       // Then
-      await expect(todosPage.todoItemCheckbox(tasks[0])).not.toBeChecked();
+      await todosPage.verifyTodoItemIsNotChecked(tasks[0]);
     });
 
     test("clear todos", async ({ todosPage }) => {
       // Given
-      await expect(todosPage.todoItemCheckbox(tasks[0])).toBeVisible();
-      await expect(todosPage.todoItemCheckbox(tasks[1])).toBeVisible();
-      await expect(todosPage.todoItemCheckbox(tasks[2])).toBeVisible();
+      await todosPage.verifyTodoItemsAreVisible(tasks);
 
       // When
       await todosPage.toggleTodoItem(tasks[0]);
       await todosPage.clearCompletedTasks();
 
       // Then
-      await expect(todosPage.todoItemCheckbox(tasks[0])).toBeHidden();
-      await expect(todosPage.todoItemCheckbox(tasks[1])).toBeVisible();
-      await expect(todosPage.todoItemCheckbox(tasks[2])).toBeVisible();
+      await todosPage.verifyTodoItemIsNotVisible(tasks[0]);
+      await todosPage.verifyTodoItemsAreVisible([tasks[1], tasks[2]]);
 
       // When
       await todosPage.toggleTodoItem(tasks[1]);
       await todosPage.clearCompletedTasks();
 
       // Then
-      await expect(todosPage.todoItemCheckbox(tasks[0])).toBeHidden();
-      await expect(todosPage.todoItemCheckbox(tasks[1])).toBeHidden();
-      await expect(todosPage.todoItemCheckbox(tasks[2])).toBeVisible();
+      await todosPage.verifyTodoItemsAreNotVisible([tasks[0], tasks[1]]);
+      await todosPage.verifyTodoItemIsVisible(tasks[2]);
     });
   });
 });
@@ -99,43 +86,39 @@ test.describe("basic tests", async () => {
 test.describe("e2e tests", { tag: ["@without_storage_state", "@e2e"] }, () => {
   test.use({ storageState: { cookies: [], origins: [] } });
 
-  test("todos", async ({ login, loginPage, topMenuFragment, leftMenuFragment, todosPage }) => {
+  test("todos", async ({ login, topMenuFragment, leftMenuFragment, todosPage }) => {
     // Given
-    await test.step("login and go to todos page", async () => {
+    await test.step("Login and go to todos page", async () => {
       login();
-      await expect(loginPage.page).toHaveURL(RELATIVE_URL);
       await topMenuFragment.openMenu();
       await leftMenuFragment.clickTodosLink();
     });
 
-    await expect(todosPage.noTodosParagraph).toBeVisible();
+    await todosPage.verifyThereAreNoTodos();
 
     // When
-    await todosPage.addTask(tasks[0]);
-    await todosPage.addTask(tasks[1]);
+    await todosPage.addTasks([tasks[0], tasks[1]]);
 
     // Then
-    await expect(todosPage.todoItem(tasks[0])).toBeVisible();
-    await expect(todosPage.todoItem(tasks[1])).toBeVisible();
-    await expect(todosPage.noTodosParagraph).toBeHidden();
+    await todosPage.verifyTodoItemsAreVisible([tasks[0], tasks[1]]);
+    await todosPage.verifyThereAreTodos();
 
     // When
     await todosPage.toggleTodoItem(tasks[1]);
     await todosPage.clearCompletedTasks();
 
     // Then
-    await expect(todosPage.todoItem(tasks[0])).toBeVisible();
-    await expect(todosPage.todoItem(tasks[1])).toBeHidden();
-    await expect(todosPage.noTodosParagraph).toBeHidden();
+    await todosPage.verifyTodoItemIsVisible(tasks[0]);
+    await todosPage.verifyTodoItemIsNotVisible(tasks[1]);
+    await todosPage.verifyThereAreTodos();
 
     // When
     await todosPage.addTask(tasks[2]);
 
     // Then
-    await expect(todosPage.todoItem(tasks[0])).toBeVisible();
-    await expect(todosPage.todoItem(tasks[1])).toBeHidden();
-    await expect(todosPage.todoItem(tasks[2])).toBeVisible();
-    await expect(todosPage.noTodosParagraph).toBeHidden();
+    await todosPage.verifyTodoItemsAreVisible([tasks[0], tasks[2]]);
+    await todosPage.verifyTodoItemIsNotVisible(tasks[1]);
+    await todosPage.verifyThereAreTodos();
 
     // When
     await todosPage.toggleTodoItem(tasks[0]);
@@ -143,9 +126,7 @@ test.describe("e2e tests", { tag: ["@without_storage_state", "@e2e"] }, () => {
     await todosPage.clearCompletedTasks();
 
     // Then
-    await expect(todosPage.todoItem(tasks[0])).toBeHidden();
-    await expect(todosPage.todoItem(tasks[1])).toBeHidden();
-    await expect(todosPage.todoItem(tasks[2])).toBeHidden();
-    await expect(todosPage.noTodosParagraph).toBeVisible();
+    await todosPage.verifyTodoItemsAreNotVisible([tasks[0], tasks[1], tasks[2]]);
+    await todosPage.verifyThereAreNoTodos();
   });
 });

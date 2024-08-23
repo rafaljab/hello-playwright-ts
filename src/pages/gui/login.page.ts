@@ -1,4 +1,5 @@
 import { type Locator, type Page } from "@playwright/test";
+import { step } from "@base/gui/base";
 import { BasePage } from "@base/gui/base.page";
 import { RELATIVE_URL } from "@playwright.config";
 
@@ -19,6 +20,7 @@ export class LoginPage extends BasePage {
     this.alertNotification = page.getByRole("alert");
   }
 
+  @step("Login", { hideArgs: true })
   async login(email: string, password: string) {
     await this.emailField.fill(email);
     await this.passField.fill(password);

@@ -52,3 +52,44 @@ export const test = baseTest.extend<Fixtures>({
 });
 
 export { expect } from "@playwright/test";
+
+export function step<This, Args extends never[], Return>(stepName?: string, options?: { hideArgs?: boolean }) {
+  /**
+   * `step` decorator can be used to create test step with given name (it will include values of function's parameters).
+   *
+   * **Usage**
+   *
+   * ```js
+   * @step("Verify item is not checked")
+   * async verifyItemIsChecked(itemName: string) {
+   *   await expect(this.itemCheckbox(itemName)).toBeChecked();
+   * }
+   * ```
+   * If you don't want to print parameter values, use `hideArgs` option which is by default set to `false`:
+   *
+   * ```js
+   * @step("Login", { hideArgs: true })
+   * async login(email: string, password: string) {
+   *   await this.emailField.fill(email);
+   *   await this.passField.fill(password);
+   *   await this.loginBtn.click();
+   * }
+   * ```
+   * @param stepName A string containing base step name.
+   *
+   */
+  return function decorator(
+    target: (this: This, ...args: Args) => Promise<Return>,
+    context: ClassMethodDecoratorContext,
+  ) {
+    return function replacementMethod(this: This, ...args: Args): Promise<Return> {
+      const hideArgs = options?.hideArgs || false;
+      const argsValues = !hideArgs && args.length > 0 ? `[${args.map(a => JSON.stringify(a)).join(", ")}]` : "";
+      // @ts-expect-error error
+      const name = `${this.constructor.name}: ${stepName || (context.name as string)} ${argsValues}`;
+      return test.step(name, async () => {
+        return await target.call(this, ...args);
+      });
+    };
+  };
+}
