@@ -1,11 +1,11 @@
 {
   "compilerOptions": {
     "strict": true,
-    "moduleResolution": "Node",
+    "target": "ES2022",
+    "module": "ESNext",
+    "moduleResolution": "bundler",
     "resolveJsonModule": true,
     "esModuleInterop": true,
-    "target": "ES5",
-    "baseUrl": ".",
     "types": ["node", "playwright"],
     "paths": {
       "@playwright.config": ["./playwright.config"],
