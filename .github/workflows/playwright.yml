@@ -9,10 +9,10 @@ jobs:
     timeout-minutes: 60
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v6
         with:
-          node-version: "20.x"
+          node-version: "24.x"
       - name: Install dependencies
         run: npm ci
       - name: Linter
@@ -25,10 +25,10 @@ jobs:
         env:
           CI: true
           ENV: ${{vars.ENV}}
-          USER_EMAIL: ${{vars.USER_EMAIL}}
+          USER_NAME: ${{vars.USER_NAME}}
           USER_PASS: ${{secrets.USER_PASS}}
         run: npm run test
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v7
         if: always()
         with:
           name: html-report

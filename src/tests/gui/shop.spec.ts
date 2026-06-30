@@ -1,9 +1,10 @@
 import { test, expect } from "@base/gui/base";
 import { RELATIVE_URL } from "@playwright.config";
 
-test.describe("basic tests", { tag: ["@with_rest_api"] }, async () => {
+test.describe("basic tests", { tag: ["@with_rest_api"] }, () => {
   test.beforeEach("go to shop page", async ({ shopPage }) => {
     await shopPage.navigate();
+    await shopPage.waitForPage();
   });
 
   test("open empty cart", async ({ shopPage }) => {

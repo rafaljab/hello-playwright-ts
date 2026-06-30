@@ -41,11 +41,11 @@ export const test = baseTest.extend<Fixtures>({
 
   login: async ({ loginPage }, use) => {
     const callback = async () => {
-      const user_email = process.env.USER_EMAIL as string;
+      const user_name = process.env.USER_NAME as string;
       const user_pass = process.env.USER_PASS as string;
 
       await loginPage.navigate();
-      await loginPage.login(user_email, user_pass);
+      await loginPage.login(user_name, user_pass);
     };
     await use(callback);
   },

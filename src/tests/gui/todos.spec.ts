@@ -4,7 +4,7 @@ import tasks from "@test-data/todos/tasks.json";
 
 const todosStorageStateFile = STORAGE_STATE_PATH + "/todos.json";
 
-test.describe("basic tests", async () => {
+test.describe("basic tests", () => {
   test.beforeEach("go to todos page", async ({ todosPage }) => {
     await todosPage.navigate();
   });
@@ -12,6 +12,7 @@ test.describe("basic tests", async () => {
   // Execute tests one by one - firstly, save storage state to use it in the next tests
   test.describe.configure({ mode: "serial" });
 
+  // eslint-disable-next-line playwright/expect-expect
   test(
     "add todos",
     {
@@ -32,7 +33,7 @@ test.describe("basic tests", async () => {
     },
   );
 
-  test.describe("with predefined state", async () => {
+  test.describe("with predefined state", () => {
     test.use({ storageState: todosStorageStateFile });
 
     test("load todos from states", async ({ todosPage }) => {
@@ -43,6 +44,7 @@ test.describe("basic tests", async () => {
       await todosPage.verifyTodoList(tasks);
     });
 
+    // eslint-disable-next-line playwright/expect-expect
     test("toggle todos", async ({ todosPage }) => {
       // Given
       await todosPage.verifyTodoItemIsNotChecked(tasks[0]);
@@ -60,6 +62,7 @@ test.describe("basic tests", async () => {
       await todosPage.verifyTodoItemIsNotChecked(tasks[0]);
     });
 
+    // eslint-disable-next-line playwright/expect-expect
     test("clear todos", async ({ todosPage }) => {
       // Given
       await todosPage.verifyTodoItemsAreVisible(tasks);
