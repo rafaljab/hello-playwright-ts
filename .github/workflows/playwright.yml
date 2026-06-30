@@ -25,7 +25,7 @@ jobs:
         env:
           CI: true
           ENV: ${{vars.ENV}}
-          USER_EMAIL: ${{vars.USER_EMAIL}}
+          USER_NAME: ${{vars.USER_NAME}}
           USER_PASS: ${{secrets.USER_PASS}}
         run: npm run test
       - uses: actions/upload-artifact@v7
