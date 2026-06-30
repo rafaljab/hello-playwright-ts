@@ -1,10 +1,12 @@
 import { type Locator, type Page } from "@playwright/test";
 import { BasePage } from "@base/gui/base.page";
 import { RELATIVE_URL } from "@playwright.config";
+import { expect } from "@base/gui/base";
 
 export class ShopPage extends BasePage {
   readonly url: string = `${RELATIVE_URL}/shop`;
 
+  readonly loadingLabel: Locator;
   readonly viewCartBtn: Locator;
   readonly browseProductsBtn: Locator;
   readonly emptyCartText: Locator;
@@ -18,6 +20,7 @@ export class ShopPage extends BasePage {
   constructor(page: Page) {
     super(page);
 
+    this.loadingLabel = page.getByText("Loading...");
     this.viewCartBtn = page.getByRole("button", { name: "View Cart" });
     this.browseProductsBtn = page.getByRole("button", { name: "Browse Products" });
     this.emptyCartText = page.getByText("There's nothing in your cart!");
@@ -27,6 +30,10 @@ export class ShopPage extends BasePage {
     this.cartProducts = page.getByRole("listitem");
     this.placeOrderBtn = page.getByRole("button", { name: "Place Order" });
     this.afterOrderText = page.getByText("Thank you for your order.");
+  }
+
+  async waitForPage() {
+    await expect(this.loadingLabel).toBeHidden();
   }
 
   async viewCart() {

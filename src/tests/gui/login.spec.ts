@@ -7,17 +7,17 @@ test.beforeEach("go to login page", async ({ loginPage }) => {
 });
 
 test(
-  "login with incorrect email",
+  "login with incorrect username",
   {
     tag: ["@without_storage_state"],
   },
   async ({ loginPage }) => {
     // Given
-    const email = "incorrect_" + process.env.USER_EMAIL;
+    const username = "incorrect_" + process.env.USER_NAME;
     const password = process.env.USER_PASS as string;
 
     // When
-    await loginPage.login(email, password);
+    await loginPage.login(username, password);
 
     // Then
     await expect(loginPage.page).toHaveURL(loginPage.url);
@@ -32,11 +32,11 @@ test(
   },
   async ({ loginPage }) => {
     // Given
-    const email = process.env.USER_EMAIL as string;
+    const username = process.env.USER_NAME as string;
     const password = "incorrect_" + process.env.USER_PASS;
 
     // When
-    await loginPage.login(email, password);
+    await loginPage.login(username, password);
 
     // Then
     await expect(loginPage.page).toHaveURL(loginPage.url);

@@ -12,7 +12,7 @@
     "test": "npx playwright test",
     "test:ui": "npx playwright test --ui",
     "test:headed": "npx playwright test --headed",
-    "test:report": "npx playwright show-report",
+    "test:report": "npx playwright show-report reports/html-report",
     "codegen": "npx playwright codegen",
     "prepare": "husky"
   },
